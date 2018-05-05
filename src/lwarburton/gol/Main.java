@@ -1,31 +1,45 @@
 package lwarburton.gol;
 
 public class Main {
-    public static final int BOARD_SIZE = 5;
+    public static final int BOARD_SIZE = 20;
+    public static final double CELL_START_DENSITY = .375;
 
     public static void main(String[] args) {
-        boolean[][] oldBoard = new boolean[][]{{false, false, false, false, false}, {false, true, false, false, false}, {false, true, false, false, false}, {false, true, false, false, false}, {false, false, false, false, false}};
-        int n = -4;
-        while (n < 3) {
+        boolean[][] oldBoard = randomBoard();
+        for (int n = 0; n < 100; n++) {
             boolean[][] newBoard = new boolean[BOARD_SIZE][BOARD_SIZE];
             printBoard(oldBoard);
             System.out.println();
             for (int y = 0; y < BOARD_SIZE; y++) {
                 for (int x = 0; x < BOARD_SIZE; x++) {
                     int liveCells = countLiveCells(y, x, oldBoard);
-                    newBoard[x][y] = cellTest(y, x, liveCells, oldBoard);
+                    newBoard[y][x] = cellTest(y, x, liveCells, oldBoard);
                 }
             }
             oldBoard = newBoard;
-            n++;
         }
+    }
+
+    public static boolean[][] randomBoard() {
+        boolean[][] startBoard = new boolean[BOARD_SIZE][BOARD_SIZE];
+        for (int y = 0; y < BOARD_SIZE; y++) {
+            for (int x = 0; x < BOARD_SIZE; x++) {
+                double random = Math.random();
+                if (random <= CELL_START_DENSITY) {
+                    startBoard[y][x] = true;
+                } else {
+                    startBoard[y][x] = false;
+                }
+            }
+        }
+        return startBoard;
     }
 
     public static void printBoard(boolean[][] oldBoard) {
         for (int y = 0; y < BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 if (oldBoard[y][x]) {
-                    System.out.print("#");
+                    System.out.print("O");
                 } else {
                     System.out.print(".");
                 }
